@@ -36,15 +36,19 @@ describe 'nova::compute' do
       ) }
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => true) }
+
+      it { should contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
     end
 
     context 'with overridden parameters' do
       let :params do
-        { :enabled            => true,
-          :ensure_package     => '2012.1-2',
-          :vncproxy_host      => '127.0.0.1',
-          :network_device_mtu => 9999,
-          :force_raw_images   => false }
+        { :enabled                            => true,
+          :ensure_package                     => '2012.1-2',
+          :vncproxy_host                      => '127.0.0.1',
+          :network_device_mtu                 => 9999,
+          :force_raw_images                   => false,
+          :heal_instance_info_cache_interval  => '120',
+        }
       end
 
       it 'installs nova-compute package and service' do
@@ -72,6 +76,8 @@ describe 'nova::compute' do
           'http://127.0.0.1:6080/vnc_auto.html'
         )
       end
+
+      it { should contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
     end
