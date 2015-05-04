@@ -8,6 +8,10 @@
 #   (optional) Whether to enable the nova-compute service
 #   Defaults to false
 #
+# [*heal_instance_info_cache_interval*]
+#   (optional) Controls how often the instance info should be updated.
+#    Defaults to '60' , to disable you can set the value to zero.
+#
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
 #   Defaults to true
@@ -91,26 +95,27 @@
 #     { 'vendor_id':'4321','product_id':'8765','physical_network':'default' } ] "
 #
 class nova::compute (
-  $enabled                       = false,
-  $manage_service                = true,
-  $ensure_package                = 'present',
-  $vnc_enabled                   = true,
-  $vncserver_proxyclient_address = '127.0.0.1',
-  $vncproxy_host                 = false,
-  $vncproxy_protocol             = 'http',
-  $vncproxy_port                 = '6080',
-  $vncproxy_path                 = '/vnc_auto.html',
-  $vnc_keymap                    = 'en-us',
-  $force_config_drive            = false,
-  $virtio_nic                    = false,
-  $neutron_enabled               = true,
-  $network_device_mtu            = undef,
-  $instance_usage_audit          = false,
-  $instance_usage_audit_period   = 'month',
-  $force_raw_images              = true,
-  $reserved_host_memory          = '512',
-  $compute_manager               = 'nova.compute.manager.ComputeManager',
-  $pci_passthrough               = undef,
+  $enabled                            = false,
+  $manage_service                     = true,
+  $ensure_package                     = 'present',
+  $vnc_enabled                        = true,
+  $vncserver_proxyclient_address      = '127.0.0.1',
+  $vncproxy_host                      = false,
+  $vncproxy_protocol                  = 'http',
+  $vncproxy_port                      = '6080',
+  $vncproxy_path                      = '/vnc_auto.html',
+  $vnc_keymap                         = 'en-us',
+  $force_config_drive                 = false,
+  $virtio_nic                         = false,
+  $neutron_enabled                    = true,
+  $network_device_mtu                 = undef,
+  $instance_usage_audit               = false,
+  $instance_usage_audit_period        = 'month',
+  $force_raw_images                   = true,
+  $reserved_host_memory               = '512',
+  $compute_manager                    = 'nova.compute.manager.ComputeManager',
+  $pci_passthrough                    = undef,
+  $heal_instance_info_cache_interval  = '60',
 ) {
 
   include nova::params
@@ -198,5 +203,9 @@ class nova::compute (
     nova_config {
       'DEFAULT/pci_passthrough_whitelist': value => check_array_of_hash($pci_passthrough);
     }
+  }
+  
+  nova_config {
+    'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
   }
 }

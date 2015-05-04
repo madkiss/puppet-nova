@@ -36,18 +36,21 @@ describe 'nova::compute' do
       ) }
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => true) }
+
+      it { should contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
     end
 
     context 'with overridden parameters' do
       let :params do
-        { :enabled              => true,
-          :ensure_package       => '2012.1-2',
-          :vncproxy_host        => '127.0.0.1',
-          :network_device_mtu   => 9999,
-          :force_raw_images     => false,
-          :reserved_host_memory => '0',
-          :compute_manager      => 'ironic.nova.compute.manager.ClusteredComputeManager',
-          :pci_passthrough      => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
+        { :enabled                            => true,
+          :ensure_package                     => '2012.1-2',
+          :vncproxy_host                      => '127.0.0.1',
+          :network_device_mtu                 => 9999,
+          :force_raw_images                   => false,
+          :reserved_host_memory               => '0',
+          :compute_manager                    => 'ironic.nova.compute.manager.ClusteredComputeManager',
+          :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
+	  :heal_instance_info_cache_interval  => '120',
         }
       end
 
@@ -81,6 +84,8 @@ describe 'nova::compute' do
           'http://127.0.0.1:6080/vnc_auto.html'
         )
       end
+
+      it { should contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
 
