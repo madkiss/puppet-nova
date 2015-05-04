@@ -72,7 +72,7 @@ class nova::rabbitmq(
     $service_ensure = 'stopped'
   }
 
-  if $cluster_disk_nodes {
+  if $cluster_nodes {
     class { $rabbitmq_class:
       service_ensure           => $service_ensure,
       port                     => $port,
