@@ -40,7 +40,7 @@ class nova::rabbitmq(
   $password           ='guest',
   $port               ='5672',
   $virtual_host       ='/',
-  $cluster_disk_nodes = false,
+  $cluster_nodes      = false,
   $enabled            = true,
   $rabbitmq_class     = 'rabbitmq::server'
 ) {
@@ -78,7 +78,8 @@ class nova::rabbitmq(
       port                     => $port,
       delete_guest_user        => $delete_guest_user,
       config_cluster           => true,
-      cluster_disk_nodes       => $cluster_disk_nodes,
+      cluster_nodes            => $cluster_nodes,
+      cluster_node_type        => 'disc',
       wipe_db_on_cookie_change => true,
     }
   } else {
